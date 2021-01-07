@@ -14,8 +14,6 @@ pool.connect((err) => {
   if (err) return console.log(err); // Shows error if something happened
 });
 
-const properties = require('./json/properties.json');
-const users = require('./json/users.json');
 
 /// Users
 
@@ -74,9 +72,7 @@ const addUser = function(user) {
   INSERT INTO users (name, email, password)
   VALUES ($1, $2, $3)
   RETURNING *;`, [user.name, user.email, user.password])
-    .then(res => {
-      return res.rows[0];
-    })
+    .then(res => res.rows[0])
     .catch(err => console.err('query error', err.stack));
 };
 exports.addUser = addUser;
@@ -178,9 +174,9 @@ exports.getAllProperties = getAllProperties;
  */
 const addProperty = function(property) {
 
-  const values = [`${property.owner_id}`, `${property.title}`, `${property.description}`, `${property.thumbnail_photo_url}`, 
-                  `${property.cover_photo_url}`, `${property.cost_per_night}`, `${property.parking_spaces}`, 
-                   `${property.number_of_bathrooms}`, `${property.number_of_bedrooms}`, `${property.country}`, 
+  const values = [`${property.owner_id}`, `${property.title}`, `${property.description}`, `${property.thumbnail_photo_url}`,
+                  `${property.cover_photo_url}`, `${property.cost_per_night}`, `${property.parking_spaces}`,
+                   `${property.number_of_bathrooms}`, `${property.number_of_bedrooms}`, `${property.country}`,
                    `${property.street}`, `${property.city}`, `${property.province}`, `${property.post_code}`];
   const queryString = `
     INSERT INTO properties (owner_id, title, description, thumbnail_photo_url, 
@@ -189,12 +185,10 @@ const addProperty = function(property) {
                             street, city, province, post_code)
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
     RETURNING *;
-    `;                          
+    `;
 
   return pool.query(queryString, values)
-  .then(res => {
-    return res.rows
-  })
-  .catch(err => console.error('query error', err.stack));
+    .then(res => res.rows)
+    .catch(err => console.error('query error', err.stack));
 };
 exports.addProperty = addProperty;
